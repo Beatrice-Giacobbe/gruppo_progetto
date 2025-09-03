@@ -14,7 +14,7 @@ from langchain.schema import Document
 from langchain_openai import AzureOpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
-from langchain_community.document_loaders import PyPDFLoader, PDFMinerLoader
+from langchain.document_loaders import PyPDFLoader, PDFMinerLoader
  
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
@@ -50,12 +50,12 @@ class Settings:
     """Config settings for RAG pipeline"""
     qdrant_url: str = "http://localhost:6333"  # Qdrant URL
     collection: str = "rag_chunks"             # Collection name
-    emb_model_name: str = "text-embedding-ada-002"  # Embedding model
+    emb_model_name: str = "embedding_model"  # Embedding model
     chunk_size: int = 1000                      # Chunk size
     chunk_overlap: int = 200                   # Overlap size
     top_n_semantic: int = 30                   # Candidates for semantic search
     top_n_text: int = 100                      # Candidates for text search
-    final_k: int = 6                           # Final results count
+    final_k: int = 6                          # Final results count
     alpha: float = 0.75                        # Semantic weight
     text_boost: float = 0.20                   # Text boost
     use_mmr: bool = True                       # Use MMR diversification
@@ -165,6 +165,8 @@ def split_documents(docs: List[Document], settings: Settings) -> List[Document]:
 def get_qdrant_client(settings: Settings) -> QdrantClient:
     """Return Qdrant client"""
     return QdrantClient(url=settings.qdrant_url, timeout=30)
+
+
 
 def recreate_collection_for_rag(client: QdrantClient, settings: Settings, vector_size: int):
     """Create Qdrant collection and indexes only if they don't exist"""
@@ -384,6 +386,3 @@ def search_rag(q, k):
         print("No result.")
         
     return format_docs_for_prompt(hits)
-
-if __name__ == '__main__':
-    print(search_rag("Cosa dice l'AI Act sui sistemi di intelligenza artificiale ad alto rischio?", 3))

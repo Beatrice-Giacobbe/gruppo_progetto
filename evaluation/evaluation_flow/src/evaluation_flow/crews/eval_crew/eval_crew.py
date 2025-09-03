@@ -6,6 +6,9 @@ from crewai.agents.agent_builder.base_agent import BaseAgent
 from typing import List
 from dotenv import load_dotenv
 from evaluation_flow.tools.custom_tool import cerca_ddg
+from deepeval.metrics import TaskCompletionMetric
+
+task_completion_metric = TaskCompletionMetric()
 
 load_dotenv()
 
@@ -23,15 +26,16 @@ class ResearchCrew():
         return Agent(
             config=self.agents_config['researcher'], # type: ignore[index]
             verbose=True,
-            tools=[cerca_ddg] #possibilità di usare tool al momento disattivata
-            #llm=LLM(model="azure/gpt-4o")
+            tools=[cerca_ddg], #possibilità di usare tool al momento disattivata
+            metrics=[task_completion_metric]
         )
 
     @agent
     def analyst(self) -> Agent:
         return Agent(
             config=self.agents_config['analyst'], # type: ignore[index]
-            verbose=True
+            verbose=True,
+            metrics=[task_completion_metric]
         )
 
     @task

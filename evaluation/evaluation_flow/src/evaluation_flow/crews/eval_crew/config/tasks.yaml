@@ -11,6 +11,7 @@ research_task:
     5. Future outlook and potential developments
 
     Make sure to organize your findings in a structured format with clear sections.
+    Use the cerca_ddg tool only three times to gather information.
   expected_output: >
     A comprehensive research document with well-organized sections covering
     all the requested aspects of {topic}. Include specific facts, figures,
